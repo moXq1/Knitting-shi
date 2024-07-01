@@ -86,8 +86,6 @@ function drawGrid(targetCtx = ctx, forExport = false) {
     Math.ceil((-offsetX + currentCtx.canvas.width) / cellSize)
   );
 
-  console.log(startRow, endRow, offsetX, startCol, endCol);
-
   if (forExport) {
     startRow = 0;
     endRow = rows;
