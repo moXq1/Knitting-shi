@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+
+    <style>
+      canvas {
+        touch-action: none;
+      }
+
+      button {
+        margin: 5px;
+      }
+
+      img {
+        object-fit: cover;
+        width: 100%;
+        filter: invert(1);
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="gridCanvas" width="400" height="400"></canvas><br />
+
+    <div class="controls">
+      <button title="добавить ряд" class="addr">+Р</button>
+      <input
+        title="изменить ряд"
+        class="num_of_rows"
+        type="number"
+        min="1"
+        step="1" />
+      <button title="удалить ряд" class="remr">-Р</button>
+      <button title="добавить столбец" class="addc">+С</button>
+      <input
+        title="изменить столбец"
+        class="num_of_cols"
+        type="number"
+        min="1"
+        step="1" />
+      <button title="удалить столбец" class="remc">-С</button>
+      <!-- <p id="gridInfo"></p> -->
+
+      <button class="save">🖼️</button>
+      <button class="info">🛈</button>
+      <button class="clear">🧹</button>
+    </div>
+
+    <div class="grab">
+      <label
+        >🖑
+        <input class="move" type="checkbox" title="двигать" />
+      </label>
+    </div>
+
+    <div id="stitchButtons">
+      <!-- <button class="stitch-btn">
+        <img src="./public/svgs/3izn.svg" alt="" />
+      </button>
+      <button class="stitch-btn">
+        <img src="./public/svgs/3l.svg" alt="" />
+      </button>
+      <button class="stitch-btn">
+        <img src="./public/svgs/4izn.svg" alt="" />
+      </button>
+      <button class="stitch-btn">
+        <img src="./public/svgs/4tog.svg" alt="" />
+      </button> -->
+    </div>
+
+    <dialog id="dialog">
+      <form method="dialog">
+        <header>
+          <h3>Условные обозначения</h3>
+          <button
+            type="button"
+            onclick="  if (window.history.state.isOpen) {
+            window.history.back();
+          }">
+            <title>close dialog</title>
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </header>
+        <article></article>
+      </form>
+    </dialog>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
