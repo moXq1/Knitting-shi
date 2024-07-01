@@ -197,6 +197,12 @@ button:focus-visible {
   margin-block-start: 50px;
 }
 
+.save,
+.clear,
+.info {
+  font-size: 1.5rem;
+}
+
 .stitch-btn {
   width: 30px;
   height: 30px;
