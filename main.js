@@ -1,6 +1,15 @@
 import "./style.css";
 import { initDialog, renderDialogContent } from "./modal";
 import { createStitchButtons, selectedStitch, stitches } from "./stitches";
+import {
+  backgroundCanvas,
+  backgroundCtx,
+  drawBackground,
+  initializeCanvases,
+  offscreenCanvas,
+  offscreenCtx,
+  updateBackgroundCanvas,
+} from "./optimize";
 
 const canvas = document.getElementById("gridCanvas");
 let row = document.querySelector(".addr");
@@ -45,79 +54,106 @@ let grid = Array(rows)
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  drawGrid();
+  offscreenCanvas.width = canvas.width;
+  offscreenCanvas.height = canvas.height;
+  backgroundCanvas.width = columns * cellSize;
+  backgroundCanvas.height = rows * cellSize;
+  drawBackground(rows, columns, cellSize);
+  updateCanvas();
+}
+
+function updateCanvas() {
+  requestAnimationFrame(drawGrid);
 }
 
 function drawGrid(targetCtx = ctx, forExport = false) {
-  const currentCtx = targetCtx;
+  const currentCtx = forExport ? targetCtx : offscreenCtx;
   currentCtx.clearRect(0, 0, currentCtx.canvas.width, currentCtx.canvas.height);
 
   currentCtx.save();
   if (!forExport) {
     currentCtx.translate(offsetX, offsetY);
+  }
+
+  let startRow = Math.max(0, Math.floor(-offsetY / cellSize));
+  let endRow = Math.min(
+    rows,
+    Math.ceil((-offsetY + currentCtx.canvas.height) / cellSize)
+  );
+  let startCol = Math.max(0, Math.floor(-offsetX / cellSize));
+  let endCol = Math.min(
+    columns,
+    Math.ceil((-offsetX + currentCtx.canvas.width) / cellSize)
+  );
+
+  console.log(startRow, endRow, offsetX, startCol, endCol);
+
+  if (forExport) {
+    startRow = 0;
+    endRow = rows;
+    startCol = 0;
+    endCol = columns;
+  }
+
+  currentCtx.drawImage(
+    backgroundCanvas,
+    startCol * cellSize,
+    startRow * cellSize,
+    (endCol - startCol + 1) * cellSize,
+    (endRow - startRow + 1) * cellSize,
+    startCol * cellSize,
+    startRow * cellSize,
+    (endCol - startCol + 1) * cellSize,
+    (endRow - startRow + 1) * cellSize
+  );
+
+  currentCtx.font = "32px Arial";
+  currentCtx.fillStyle = "#000";
+  // Draw grid lines and stitches
+  for (let i = startRow; i < endRow; i++) {
+    for (let j = startCol; j < endCol; j++) {
+      currentCtx.save();
+      currentCtx.font = "11px Arial";
+      currentCtx.fillStyle = "#00000085";
+      currentCtx.fillText(
+        `${i + 1}-${j + 1}`,
+        j * cellSize + cellSize / 4,
+        i * cellSize + cellSize / 4
+      );
+      currentCtx.restore();
+
+      if (grid[i][j]) {
+        if (grid[i][j].isSymbolImage) {
+          currentCtx.drawImage(
+            grid[i][j].symbol,
+            j * cellSize + cellSize / 2 - 10,
+            i * cellSize + cellSize / 2 - 5,
+            20,
+            20
+          );
+        } else {
+          currentCtx.fillText(
+            grid[i][j].symbol,
+            j * cellSize + cellSize / 2 - 15,
+            i * cellSize + cellSize / 2 + 15
+          );
+        }
+      }
+    }
+  }
+
+  if (!forExport) {
     currentCtx.save();
     currentCtx.font = "32px ui-serif";
     currentCtx.fillText("ГЕНЕРАТОР СХЕМ", 50, -20);
     currentCtx.restore();
   }
 
-  currentCtx.strokeStyle = "#000";
-  currentCtx.fillStyle = "#000";
-  currentCtx.font = "32px Arial";
-
-  currentCtx.fillStyle = "#f0eee6";
-  currentCtx.fillRect(0, 0, currentCtx.canvas.width, currentCtx.canvas.width);
-  currentCtx.fillStyle = "#000";
-  // Draw grid lines and stitches
-  for (let i = 0; i <= rows; i++) {
-    currentCtx.beginPath();
-    currentCtx.moveTo(0, i * cellSize);
-    currentCtx.lineTo(columns * cellSize, i * cellSize);
-    currentCtx.stroke();
-
-    if (i < rows) {
-      for (let j = 0; j < columns; j++) {
-        ctx.save();
-        currentCtx.font = "11px Arial";
-        currentCtx.fillStyle = "#00000085";
-        currentCtx.fillText(
-          `${i + 1}-${j + 1}`,
-          j * cellSize + cellSize / 4,
-          i * cellSize + cellSize / 4
-        );
-        ctx.restore();
-        if (grid[i][j]) {
-          currentCtx.font = "32px Arial";
-          if (grid[i][j].isSymbolImage) {
-            currentCtx.drawImage(
-              grid[i][j].symbol,
-              j * cellSize + cellSize / 2 - 10,
-              i * cellSize + cellSize / 2 - 5,
-              20,
-              20
-            );
-          } else {
-            currentCtx.fillText(
-              grid[i][j].symbol,
-              j * cellSize + cellSize / 2 - 15,
-              i * cellSize + cellSize / 2 + 15
-            );
-          }
-        }
-      }
-    }
-  }
-
-  for (let j = 0; j <= columns; j++) {
-    currentCtx.beginPath();
-    currentCtx.moveTo(j * cellSize, 0);
-    currentCtx.lineTo(j * cellSize, rows * cellSize);
-    currentCtx.stroke();
-  }
-
   currentCtx.restore();
 
   if (!forExport) {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    ctx.drawImage(offscreenCanvas, 0, 0);
     updateGridInfo();
   }
 }
@@ -146,7 +182,8 @@ function addRow(isRedrawing = true) {
   rows++;
   grid.push(Array(columns).fill(""));
   if (isRedrawing) {
-    drawGrid();
+    updateBackgroundCanvas(rows, columns, cellSize);
+    updateCanvas();
   }
 }
 
@@ -154,7 +191,8 @@ function addColumn(isRedrawing = true) {
   columns++;
   grid.forEach((row) => row.push(""));
   if (isRedrawing) {
-    drawGrid();
+    updateBackgroundCanvas(rows, columns, cellSize);
+    updateCanvas();
   }
 }
 
@@ -162,6 +200,7 @@ function removeRow(isRedrawing = true) {
   rows--;
   grid.pop();
   if (isRedrawing) {
+    updateBackgroundCanvas(rows, columns, cellSize);
     drawGrid();
   }
 }
@@ -170,6 +209,7 @@ function removeColumn(isRedrawing = true) {
   columns--;
   grid.forEach((row) => row.pop());
   if (isRedrawing) {
+    updateBackgroundCanvas(rows, columns, cellSize);
     drawGrid();
   }
 }
@@ -211,7 +251,7 @@ canvas.addEventListener("pointermove", (event) => {
     offsetY += deltaY;
     lastX = event.clientX;
     lastY = event.clientY;
-    requestAnimationFrame(() => drawGrid());
+    updateCanvas();
   }
 });
 
@@ -240,4 +280,7 @@ window.addEventListener("resize", resizeCanvas);
 createStitchButtons();
 initDialog();
 renderDialogContent(stitches);
+
+initializeCanvases(rows, columns, cellSize, canvas);
+updateCanvas();
 resizeCanvas();
