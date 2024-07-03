@@ -91,19 +91,6 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-/* @media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-} */
-
 .controls {
   position: fixed;
   top: 0;
@@ -183,6 +170,14 @@ button:focus-visible {
   }
 }
 
+html:has(.grab input:checked) {
+  cursor: move;
+
+  & :active {
+    cursor: grab;
+  }
+}
+
 #stitchButtons {
   position: fixed;
   bottom: 0;
@@ -238,6 +233,7 @@ dialog::backdrop {
 }
 html:has(dialog[open]) {
   overflow: hidden;
+  cursor: initial !important;
 }
 
 dialog:not([open]) {
@@ -280,14 +276,6 @@ dialog > form > header > button {
   margin: 0;
   border: none;
   transition: 0.2s ease all;
-  --hg-size: 0;
-
-  /* box-shadow: 0 0 0 var(--hg-size) var(--highlight); */
-
-  &:hover {
-    scale: 1.1;
-    /* --hg-size: 0.5rem; */
-  }
 }
 
 svg {
@@ -359,7 +347,4 @@ dialog > form > article {
     filter: invert(0);
     width: 15px;
   }
-}
-
-.description {
 }
