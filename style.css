@@ -18,6 +18,16 @@
   color: #213547;
 }
 
+button {
+  margin: 5px;
+}
+
+img {
+  object-fit: cover;
+  width: 100%;
+  filter: invert(1);
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -82,6 +92,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
+  color: white;
 }
 button:hover {
   border-color: #646cff;
@@ -118,7 +129,7 @@ button:focus-visible {
   padding: 0;
   background-color: #413e3e;
   font-size: 1em;
-
+  color: white;
   border-radius: 8px;
   border: 1px solid transparent;
 
@@ -201,6 +212,7 @@ html:has(.grab input:checked) {
 .stitch-btn {
   width: 30px;
   height: 30px;
+  color: white;
   margin: 2px;
   display: inline-flex;
   transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
@@ -282,7 +294,7 @@ svg {
   inline-size: 2ch;
   block-size: 2ch;
   flex-shrink: 0;
-  stroke: currentColor;
+  stroke: white;
   fill: none;
   stroke-linecap: round;
   stroke-width: 3px;
