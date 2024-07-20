@@ -239,7 +239,7 @@ dialog {
   overflow: hidden;
   margin: auto;
   padding: 0;
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 10;
 }
@@ -263,9 +263,9 @@ dialog > form {
   display: grid;
   grid-template-rows: auto 1fr auto;
   align-items: start;
-  max-block-size: 80vh;
+  max-block-size: 80dvh;
   max-block-size: 80dvb;
-  width: min(80ch, 90vw);
+  width: min(80ch, 90dvw);
   overflow-y: auto;
   background-color: #f0eee6;
 }
@@ -308,14 +308,14 @@ svg {
 
 @media (max-width: 500px) {
   dialog {
-    inline-size: 100vw;
-    block-size: 100vh;
+    inline-size: 100dvw;
+    block-size: 100dvh;
     max-width: 100dvw;
     max-height: none;
   }
 
   dialog > form {
-    height: 100vh;
+    height: 100dvh;
     width: 100%;
     max-height: none;
   }
