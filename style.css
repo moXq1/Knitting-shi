@@ -25,6 +25,7 @@ button {
 .stitch-btn:has(img) {
   background-color: white;
   filter: invert(1);
+  -webkit-filter: invert(1);
 }
 
 img {
@@ -74,9 +75,11 @@ h1 {
 }
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
+  -webkit-filter: drop-shadow(0 0 2em #646cffaa);
 }
 .logo.vanilla:hover {
   filter: drop-shadow(0 0 2em #f7df1eaa);
+  -webkit-filter: drop-shadow(0 0 2em #f7df1eaa);
 }
 
 .card {
@@ -203,7 +206,9 @@ html:has(.grab input:checked) {
   left: 0;
   right: 0;
   padding: 10px;
-
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
   background: rgba(255, 255, 255, 0.8);
 }
 
@@ -224,6 +229,8 @@ html:has(.grab input:checked) {
   color: white;
   margin: 2px;
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
 
   &.active {
@@ -333,12 +340,6 @@ dialog > form > article {
   gap: 1rem;
 }
 
-.stitchButtons {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .stich {
   display: inline-flex;
   padding: 0.3rem 0.4rem;
@@ -376,5 +377,6 @@ dialog > form > article {
 
   .symbol:has(img) {
     filter: invert(0);
+    -webkit-filter: invert(0);
   }
 }

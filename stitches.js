@@ -52,7 +52,7 @@ export function createStitchButtons() {
     if (value.isSymbolImage) {
       button.append(value.symbol);
     } else {
-      button.textContent = value.symbol === "" ? "🞐" : value.symbol;
+      button.innerHTML = value.symbol === "" ? "&#128912;" : value.symbol;
     }
 
     button.title = value.description;
