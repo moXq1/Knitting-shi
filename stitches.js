@@ -50,7 +50,9 @@ export function createStitchButtons() {
   for (const [key, value] of Object.entries(stitches)) {
     const button = document.createElement("button");
     if (value.isSymbolImage) {
-      button.append(value.symbol);
+      // button.append(value.symbol);
+
+      button.insertAdjacentHTML("afterbegin", value.symbol.outerHTML);
     } else {
       button.innerHTML = value.symbol === "" ? "□" : value.symbol;
     }
