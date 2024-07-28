@@ -50,7 +50,11 @@ export async function createStitchButtons() {
 
   for (const [key, value] of Object.entries(stitches)) {
     if (value.isSymbolImage) {
-      value.symbol = await loadImage(value.symbol);
+      try {
+        value.symbol = await loadImage(value.symbol);
+      } catch (e) {
+        alert(e);
+      }
     }
   }
 
@@ -64,7 +68,8 @@ export async function createStitchButtons() {
       img.alt = value.description;
       // img.style.width = "20px";  // Adjust as needed
       // img.style.height = "20px";  // Adjust as needed
-      button.appendChild(img);
+      //button.appendChild(img);
+      button.innerHTML = img.src;
     } else {
       button.innerHTML = value.symbol === "" ? "□" : value.symbol;
     }
@@ -83,7 +88,10 @@ export async function createStitchButtons() {
 function loadImage(url) {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    img.onload = () => resolve(img);
+    img.onload = () => {
+      alert("123");
+      resolve(img);
+    };
     img.onerror = reject;
     img.src = url;
   });
