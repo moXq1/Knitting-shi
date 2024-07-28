@@ -275,10 +275,14 @@ canvas.addEventListener("click", (event) => {
 
 window.addEventListener("resize", resizeCanvas);
 
-createStitchButtons();
-initDialog();
-renderDialogContent(stitches);
+async function init() {
+  await createStitchButtons();
+  initDialog();
+  renderDialogContent(stitches);
 
-initializeCanvases(rows, columns, cellSize, canvas);
-updateCanvas();
-resizeCanvas();
+  initializeCanvases(rows, columns, cellSize, canvas);
+  updateCanvas();
+  resizeCanvas();
+}
+
+init();

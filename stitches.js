@@ -48,12 +48,14 @@ export function selectStitch(stitch) {
 export async function createStitchButtons() {
   const container = document.getElementById("stitchButtons");
 
+  container.innerHTML = "";
+
   for (const [key, value] of Object.entries(stitches)) {
     if (value.isSymbolImage) {
       try {
         value.symbol = await loadImage(value.symbol);
       } catch (e) {
-        alert(e);
+        console.log(e);
       }
     }
   }
@@ -64,14 +66,19 @@ export async function createStitchButtons() {
       // button.append(value.symbol);
 
       const img = document.createElement("img");
-      img.src = value.symbol.src;
+      img.src = value.symbol.src || value.symbol;
       img.alt = value.description;
-      // img.style.width = "20px";  // Adjust as needed
-      // img.style.height = "20px";  // Adjust as needed
+      img.style.width = "16px"; // Adjust as needed
+      img.style.height = "15px";
+
+      img.onerror = () => {
+        console.error(`Failed to load image for ${key}`);
+        button.textContent = "?"; // Fallback symbol
+      }; // Adjust as needed
       //button.appendChild(img);
-      button.innerHTML = img.src;
+      button.appendChild(img);
     } else {
-      button.innerHTML = value.symbol === "" ? "□" : value.symbol;
+      button.textContent = value.symbol || "□";
     }
 
     button.title = value.description;
@@ -89,7 +96,6 @@ function loadImage(url) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
-      alert("123");
       resolve(img);
     };
     img.onerror = reject;
