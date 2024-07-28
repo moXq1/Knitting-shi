@@ -8,7 +8,7 @@ export const stitches = {
   yo: { symbol: "◯", description: "1 накид" },
   ssk: { symbol: "◣", description: "2 лиц с наклоном влево" },
   sl1k2psso: {
-    symbol: loadImage("./svgs/3l.svg"),
+    symbol: "./svgs/3l.svg",
     isSymbolImage: true,
     description:
       "3 лиц вместе(=1 п.снять не провязывая,2 п. вместе и протянут через снятую)",
@@ -25,17 +25,17 @@ export const stitches = {
     description: "2 изн. с наклоном вправо(перекрутить и провязать)",
   },
   sssk: {
-    symbol: loadImage("./svgs/3izn.svg"),
+    symbol: "./svgs/3izn.svg",
     isSymbolImage: true,
     description: "3 изн. вместе",
   },
   k4tog: {
-    symbol: loadImage("./svgs/4tog.svg"),
+    symbol: "./svgs/4tog.svg",
     isSymbolImage: true,
     description: "4 лиц вместе",
   },
   p4tog: {
-    symbol: loadImage("./svgs/4izn.svg"),
+    symbol: "./svgs/4izn.svg",
     isSymbolImage: true,
     description: "4 изн. вместе",
   },
@@ -45,14 +45,26 @@ export function selectStitch(stitch) {
   selectedStitch = stitch;
 }
 
-export function createStitchButtons() {
+export async function createStitchButtons() {
   const container = document.getElementById("stitchButtons");
+
+  for (const [key, value] of Object.entries(stitches)) {
+    if (value.isSymbolImage) {
+      value.symbol = await loadImage(value.symbol);
+    }
+  }
+
   for (const [key, value] of Object.entries(stitches)) {
     const button = document.createElement("button");
     if (value.isSymbolImage) {
       // button.append(value.symbol);
 
-      button.insertAdjacentHTML("afterbegin", value.symbol.outerHTML);
+      const img = document.createElement("img");
+      img.src = value.symbol.src;
+      img.alt = value.description;
+      // img.style.width = "20px";  // Adjust as needed
+      // img.style.height = "20px";  // Adjust as needed
+      button.appendChild(img);
     } else {
       button.innerHTML = value.symbol === "" ? "□" : value.symbol;
     }
@@ -69,7 +81,10 @@ export function createStitchButtons() {
 }
 
 function loadImage(url) {
-  let img = new Image();
-  img.src = url;
-  return img;
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = url;
+  });
 }
