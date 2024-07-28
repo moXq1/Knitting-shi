@@ -23,9 +23,7 @@ button {
 }
 
 .stitch-btn:has(img) {
-  background-color: white;
-  filter: invert(1);
-  -webkit-filter: invert(1);
+  background-color: #f0eee6;
 }
 
 img {
@@ -209,7 +207,7 @@ html:has(.grab input:checked) {
   display: inline-flex;
   align-items: center;
   flex-wrap: wrap;
-  background: rgba(255, 255, 255, 0.8);
+  background-color: #bbb9af68;
 }
 
 .save,
@@ -226,9 +224,11 @@ html:has(.grab input:checked) {
 .stitch-btn {
   width: 30px;
   height: 30px;
-  color: white;
+  color: black;
+  background-color: #f0eee6;
   margin: 2px;
   display: inline-flex;
+  border: 1px solid black;
   align-items: center;
   justify-content: center;
   transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
@@ -257,6 +257,7 @@ dialog {
 
 dialog::backdrop {
   backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
   transition: backdrop-filter 0.5s ease;
 }
 html:has(dialog[open]) {

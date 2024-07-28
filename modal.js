@@ -51,7 +51,7 @@ function getDescriptionEl(obj, key) {
   stich.insertAdjacentHTML(
     "afterbegin",
     `  
-    <div class="symbol">${symbol || "&#128912;"}</div>
+    <div class="symbol">${symbol || "□"}</div>
     <div class="description">${obj.description}</div>
 
   `
